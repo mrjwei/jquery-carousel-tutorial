@@ -5,6 +5,19 @@ $(function() {
   var currentIndex = 0
   var nextIndex
   var $currentItem = $items.eq(currentIndex)
+  // add this line
+  var $indicatorWrapper = $(".indicator-wrapper")
+  var interval
+
+  // add this block to generate indicators
+  // here we loop through each item because we want
+  // the number of indicators to match that of items
+  $items.each(function() {
+    $indicatorWrapper.append("<li class='indicator'><button class='indicator-btn'></button></li>")
+  })
+  // add these 2 lines to make the first indicator active at first load
+  var $indicators = $(".indicator-btn")
+  $indicators.eq(currentIndex).addClass("active")
 
   // display the the first carousel item
   // when window loads for the first time
@@ -32,7 +45,8 @@ $(function() {
   }
 
   // the core function that handles carousel movement
-  // depending on the value of the optional direction argument, the carousel moves forward or backward
+  // depending on the value of the optional direction argument,
+  // the carousel moves forward or backward
   function moveCarousel(direction = "normal") {
     if (direction == "normal") {
       nextIndex = getNextIndex(0, currentIndex, $items.length - 1)
@@ -54,17 +68,20 @@ $(function() {
         left: "100%"
       }, 500)
     }
+    $indicators.removeClass("active")
+    $indicators.eq(nextIndex).addClass("active")
 
     currentIndex = nextIndex
   }
 
-  // the carousel moves every 2 seconds automatically
-  var interval = setInterval(function() {
+  interval = setInterval(function() {
     moveCarousel()
   }, 2000)
 
-  // but when user clicked a button, prev or next, clear the interval and handle the click event by moving carousel forward or backward.
-  // after the event is handled, get the interval back and the carousel moves automatically again
+  // but when user clicked a button, prev or next, clear the interval and
+  // handle the click event by moving carousel forward or backward
+  // after the event is handled, get the interval back and
+  // the carousel moves automatically again
   $prev.click(function() {
     clearInterval(interval)
     moveCarousel(direction = "reverse")
